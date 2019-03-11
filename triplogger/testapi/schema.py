@@ -81,8 +81,43 @@ class CreateTrip(graphene.Mutation):
             date=trip.date
         )
 
-#4
+class UpdateTrip(graphene.Mutation):
+    id = graphene.Int()
+    driver_name = graphene.String()
+    reg_number = graphene.String()
+    opening_milage = graphene.Int()
+    closing_milage = graphene.Int()
+    destination = graphene.String()
+    comments = graphene.String()
+    date = graphene.Date()
+
+    class Arguments:
+        id = graphene.Int(required=True)
+        driver_name = graphene.String(required=False)
+        reg_number = graphene.String(required=False)
+        opening_milage = graphene.Int(required=False)
+        closing_milage = graphene.Int(required=False)
+        destination = graphene.String(required=False)
+        comments = graphene.String(required=False)
+        date = graphene.Date(required=True)
+
+    def mutate(self, info, id, driver_name, reg_number, opening_milage, closing_milage, destination, comments, date):
+        trip = Trip(id=id, driver_name=driver_name, reg_number=reg_number, opening_milage=opening_milage,
+            closing_milage=closing_milage, destination=destination, comments=comments, date=date)
+        trip.save()
+
+        return UpdateTrip(
+            id=trip.id,
+            driver_name=trip.driver_name,
+            reg_number=trip.reg_number,
+            opening_milage=trip.opening_milage,
+            closing_milage=trip.closing_milage,
+            destination=trip.destination,
+            comments=trip.comments,
+            date=trip.date
+        )
+
 class Mutation(graphene.ObjectType):
     create_user = CreateUser.Field()
     create_trip = CreateTrip.Field()
-
+    update_trip = UpdateTrip.Field()
